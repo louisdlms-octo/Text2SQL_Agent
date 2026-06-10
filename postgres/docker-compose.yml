@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_chatbot_ecommerce
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ecommerce
+    ports:
+      - "8001:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d:ro
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:
