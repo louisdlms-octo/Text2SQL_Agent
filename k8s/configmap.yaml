@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: text2sql-api-config
+data:
+  PG_HOST: "host.minikube.internal"
+  PG_PORT: "8001"
+  PG_USER: "postgres"
+  PG_DB: "ecommerce"
+  MAMMOUTH_BASE_URL: "https://api.mammouth.ai/v1"
+  MLFLOW_TRACKING_URI: "http://host.minikube.internal:5000"

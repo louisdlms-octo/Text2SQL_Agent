@@ -2,6 +2,11 @@ services:
   mlflow:
     build: .
     container_name: mlflow_server
+    environment:
+      # Autorise les hôtes appelant MLflow (protection anti DNS-rebinding).
+      # Le pod k8s appelle via host.minikube.internal:5000 -> on l'autorise
+      # (avec ET sans le port, à cause d'un bug de comparaison exacte côté MLflow).
+      MLFLOW_SERVER_ALLOWED_HOSTS: "localhost,localhost:5000,127.0.0.1,127.0.0.1:5000,host.minikube.internal,host.minikube.internal:5000"
     ports:
       - "5000:5000"
     volumes:

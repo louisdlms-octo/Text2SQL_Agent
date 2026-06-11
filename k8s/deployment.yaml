@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text2sql-api
+  labels:
+    app: text2sql-api
+spec:
+  replicas: 1                      # 1 seul pod (instance) pour commencer
+  selector:
+    matchLabels:
+      app: text2sql-api
+  template:
+    metadata:
+      labels:
+        app: text2sql-api          # étiquette qui relie le pod au Service
+    spec:
+      containers:
+        - name: api
+          image: text2sql-api:dev  # l'image qu'on a chargée dans minikube
+          imagePullPolicy: IfNotPresent  # utilise l'image locale, ne va pas la chercher en ligne
+          ports:
+            - containerPort: 8000
+          # On injecte TOUTES les variables du ConfigMap + du Secret
+          envFrom:
+            - configMapRef:
+                name: text2sql-api-config
+            - secretRef:
+                name: text2sql-api-secrets
+          # k8s vérifie que l'API est prête / vivante via /health
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: text2sql-api
+  labels:
+    app: text2sql-api
+spec:
+  type: NodePort           # expose le service en dehors du cluster
+  selector:
+    app: text2sql-api      # cible les pods portant cette étiquette
+  ports:
+    - port: 8000           # port du Service (interne au cluster)
+      targetPort: 8000     # port du conteneur
+      nodePort: 30080      # port exposé sur le "noeud" minikube

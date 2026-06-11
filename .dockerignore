@@ -1,0 +1,24 @@
+# Environnement virtuel local (binaires Mac, inutiles + lourds dans l'image)
+.venv
+
+# Git
+.git
+.github
+
+# Caches Python
+__pycache__/
+*.pyc
+*.egg-info
+.pytest_cache
+.ruff_cache
+
+# Secrets / config locale (injectés via k8s, pas dans l'image)
+.env
+
+# Autres services du repo, non nécessaires à l'API
+streamlit
+postgres
+mlflow
+
+# Doc
+README.md
