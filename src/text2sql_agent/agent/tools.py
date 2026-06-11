@@ -27,7 +27,7 @@ def get_table_schema(table_name: str) -> str:
         return result
     else :
         rows = result[1]
-        formatted_result = "## Liste des colonnes:\n" + "\n".join([f"- {row[0]}: {row[1]}" for row in rows])
+        formatted_result = f"## Liste des colonnes de la table {table_name}:\n" + "\n".join([f"- {row[0]}: {row[1]}" for row in rows])
         return formatted_result
 
 @tool
