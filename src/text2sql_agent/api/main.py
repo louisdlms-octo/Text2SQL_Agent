@@ -3,9 +3,10 @@ from pydantic import BaseModel
 import mlflow
 
 from text2sql_agent.agent.graph import compiled_agent
+from text2sql_agent.config import MLFLOW_TRACKING_URI
 
 # Specify the tracking URI for the MLflow server.
-mlflow.set_tracking_uri("http://localhost:5000")
+mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 # Specify the experiment you just created for your LLM application or AI agent.
 mlflow.set_experiment("Text-to-SQL Agent")
 # Enable automatic tracing for all langchain API calls.

@@ -11,3 +11,5 @@ PG_PORT = os.getenv("PG_PORT", "8001")
 PG_USER = os.getenv("PG_USER", "postgres")
 PG_PASSWORD = os.getenv("PG_PASSWORD", "password")
 PG_DB = os.getenv("PG_DB", "ecommerce")
+
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
