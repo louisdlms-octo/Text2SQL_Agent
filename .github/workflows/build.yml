@@ -1,0 +1,56 @@
+name: CI — Build & push de l'image (ghcr.io)
+
+# Se déclenche à chaque push sur main (+ lancement manuel depuis l'onglet Actions).
+# IMPORTANT : tout tourne sur les serveurs de GitHub (ubuntu-latest),
+# rien ne s'exécute sur ta machine. Le déploiement, lui, est fait en local
+# par scripts/deploy.sh ou scripts/watch-deploy.sh (pull-based).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# Droits du token automatique du workflow : publier des images
+# dans le registre de conteneurs du repo (ghcr.io). Rien à configurer.
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/louisdlms-octo/text2sql-api
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest   # machine éphémère fournie par GitHub
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      # QEMU + Buildx permettent de construire une image multi-architecture :
+      # amd64 (serveurs classiques) ET arm64 (ton Mac Apple Silicon / minikube)
+      - name: Configurer QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Configurer Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Se connecter à ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   # token injecté automatiquement par GitHub
+
+      # Deux tags : le sha du commit (traçabilité : on sait exactement quel
+      # code tourne) et "latest" (pratique pour récupérer la dernière version).
+      - name: Build & push l'image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
