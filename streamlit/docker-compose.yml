@@ -1,0 +1,11 @@
+services:
+  streamlit:
+    build:
+      context: ..
+      dockerfile: streamlit/dockerfile
+    environment:
+      - API_URL=http://host.docker.internal:8000
+    ports:
+      - "8501:8501"
+    env_file:
+      - ../.env

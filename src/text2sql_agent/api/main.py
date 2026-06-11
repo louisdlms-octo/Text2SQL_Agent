@@ -24,8 +24,8 @@ class QueryResponse(BaseModel):
 def health_check():
     return {"status": "ok"}
 
-@app.post("/query", response_model=QueryResponse)
-async def query_agent(req: QueryRequest):
+@app.post("/invoke", response_model=QueryResponse)
+async def invoke_agent(req: QueryRequest):
     try:
         result = await compiled_agent.ainvoke(
             {"messages": [{"role": "user", "content": req.message}]}
